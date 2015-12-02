@@ -6,12 +6,12 @@ public class NumConverter {
     public static final char DECIMAL_SEPARATOR = '.';
 
     public static String intToString(int number) {
-        String result = new String();
+        String result = "";
         boolean isNegative = (number < 0);
 
         do {
             result = Math.abs(number) % 10 + result;
-            number = (int) number / 10;
+            number = number / 10;
         } while (number != 0);
 
         if (isNegative)
@@ -42,7 +42,7 @@ public class NumConverter {
     }
 
     public static String doubleToString(double number) {
-        int integral = (int) Math.abs((int) number);
+        int integral = Math.abs((int) number);
         int fractional = (int) Math.round((Math.abs(number) - integral) * Math.pow(10, MAX_FRACTIONAL_DIGITS));
         String integralString = intToString(integral);
         String fractionalString = intToString(fractional).replaceAll("0+$", "");
@@ -94,6 +94,7 @@ public class NumConverter {
 
 }
 
+// TODO: inherite from runtime exception
 class IntOverflowException extends Exception {
     public IntOverflowException(String message) {
         super(message);
