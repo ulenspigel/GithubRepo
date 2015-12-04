@@ -1,5 +1,6 @@
 import com.sun.deploy.util.ArrayUtil;
 
+import java.io.StringWriter;
 import java.util.Arrays;
 
 /**
@@ -7,127 +8,151 @@ import java.util.Arrays;
  */
 public class SandboxMethods {
 
-    public static void printCharArray(char[] charArray) {
-        for (char currentChar: charArray)
+    // 1 - naming convention
+    public static void print(char[] array) {
+        for (char currentChar: array) {
             System.out.print(currentChar);
+        }
     }
 
-    public static void print2DStringArray(String[][] string2DArray) {
-        for (String[] stringArray : string2DArray) {
-            for (String string : stringArray)
+    // 2 - naming convention
+    public static void print(String[][] array) {
+        for (String[] arrayRow : array) {
+            for (String string : arrayRow) {
                 System.out.print(string + " ");
+            }
             System.out.println();
         }
     }
 
-    public static char[][] intArrayToCharArray(int[][] intArray) {
-        char[][] charArray = new char[intArray.length][intArray[0].length];
+    // 3 - naming convention + handling array with different lengths of rows
+    public static char[][] convert(int[][] array) {
+        char[][] charArray = new char[array.length][];
 
-        for (int i = 0; i < intArray.length; i++)
-            for (int j = 0; j < intArray[i].length; j++)
-                charArray[i][j] = (char) intArray[i][j];
+        for (int i = 0; i < array.length; i++) {
+            char[] arrayRow = new char[array[i].length];
+            for (int j = 0; j < array[i].length; j++) {
+                arrayRow[j] = (char) array[i][j];
+            }
+            charArray[i] = arrayRow;
+        }
 
         return charArray;
     }
 
-    public static void intArrayInversion(int[][] int2DArray) {
-        for (int i = 0; i < int2DArray.length; i++)
-            for (int j = 0; j < int2DArray[i].length; j++)
-                int2DArray[i][j] *= -1;
+    // 4 - naming convention + braces in loops
+    public static void invert(int[][] array) {
+        for (int i = 0; i < array.length; i++) {
+            for (int j = 0; j < array[i].length; j++) {
+                array[i][j] *= -1;
+            }
+        }
     }
 
-    public static int findGreatest(int a, int b) {
-        int result = a;
-        if (result < b)
-            result = b;
-        return result;
+    // 5 - rename + refactor
+    public static int max(int a, int b) {
+        return (a < b ? b : a);
     }
 
-    public static int findGreatest(int a, int b, int c) {
-        return findGreatest(findGreatest(a, b), c);
+    // 6 - rename
+    public static int max(int a, int b, int c) {
+        return max(max(a, b), c);
     }
 
-    public static int findGreatest(int a, int b, int c, int d, int e) {
-        return findGreatest(findGreatest(findGreatest(a, b), findGreatest(c, d)), e);
+    // 7 - rename + refactor
+    public static int max(int a, int b, int c, int d, int e) {
+        return max(max(a, b, c), max(d, e));
     }
 
-    public static String charArrayToString(char[] charArray) {
-        String string = new String();
-        for (char currentChar: charArray)
-            string += currentChar;
-        return string;
+    // 8 - rewritten
+    public static String toString(char[] array) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (char currentChar: array) {
+            stringBuilder.append(currentChar);
+        }
+
+        return stringBuilder.toString();
     }
 
-    public static boolean isSubstring(char[] whole, char[] part) {
+    // 9 - renamed
+    public static boolean contains(char[] whole, char[] part) {
         boolean result = true;
         for (int i = 0; i < whole.length; i++) {
             result = true;
-            for (int j = 0; j < part.length; j++)
+            for (int j = 0; j < part.length; j++) {
                 if (whole[i + j] != part[j]) {
                     result = false;
                     break;
                 }
-            if (result)
+            }
+            if (result) {
                 break;
+            }
         }
-
         return result;
     }
 
-    public static int findIntPosition(int[] intArray, int intValue) {
-        int index = -1;
-
-        for (int i = 0; i < intArray.length; i++)
-            if (intArray[i] == intValue) {
-                index = i;
-                break;
+    // 10 - naming
+    public static int indexOf(int[] array, int value) {
+        for (int i = 0; i < array.length; i++)
+            if (array[i] == value) {
+                return i;
             }
 
-        return index;
+        return -1;
     }
 
-    public static int findIntPositionReverse(int[] intArray, int intValue) {
-        int index = -1;
-        for (int i = intArray.length - 1; i >= 0; i--)
-            if (intArray[i] == intValue) {
-                index = i;
-                break;
+    // 11 - naming
+    public static int lastIndexOf(int[] array, int value) {
+        for (int i = array.length - 1; i >= 0; i--) {
+            if (array[i] == value) {
+                return i;
             }
-        return index;
+        }
+        return -1;
     }
 
+    // 12
     public static int factorial(int value) {
         int result = 1;
-        if (value > 1)
+        if (value > 1) {
             result = value * factorial(value - 1);
+        }
         return result;
     }
 
+    // 13 - change algo
     public static boolean isLeapYear(int year) {
-        boolean result = (year % 4 == 0);
-        return result;
+        return (year % 400 == 0 || (year % 4 == 0 && year % 100 != 0));
     }
 
-    public static String[] filterBySubstring(String[] stringArray, String pattern) {
-        String[] filteredStrings = new String[stringArray.length];
-        int stringsAdded = 0;
+    // 14
+    public static String[] filterByPattern(String[] array, String pattern) {
+        String[] filteredStrings = new String[array.length];
+        int addedStringsCount = 0;
 
-        for (String currentString: stringArray)
-            if (currentString.contains(pattern)) {
-                filteredStrings[stringsAdded++] = currentString;
+        for (String arrayItem: array) {
+            if (arrayItem.contains(pattern)) {
+                filteredStrings[addedStringsCount++] = arrayItem;
             }
-        filteredStrings = Arrays.copyOfRange(filteredStrings, 0, stringsAdded);
+        }
+        filteredStrings = Arrays.copyOfRange(filteredStrings, 0, addedStringsCount);
 
         return filteredStrings;
     }
 
-    public static void printDivisibleElements(int[] intArray, int divider) {
-        for (int currentInt: intArray)
-            if (currentInt % divider == 0)
-                System.out.print(currentInt + " ");
+    // 15 - naming
+    public static void printDivisible(int[] array, int divider) {
+        for (int arrayItem: array) {
+            if (arrayItem % divider == 0) {
+                System.out.print(arrayItem + " ");
+            }
+        }
     }
 
-    public static void printRoundedDouble(double number) {
+    // 16
+    public static void printRounded(double number) {
         System.out.print(Math.round(number * 1000) / 1000d);
     }
 
@@ -164,126 +189,132 @@ public class SandboxMethods {
             quickSort(array, i, rightBound, isAscending);
     }
 
-    public static void sortArrayAscending(int[] array) {
+    // 17
+    public static void sortAscending(int[] array) {
         quickSort(array, 0, array.length - 1, true);
     }
 
-    public static void sortArrayDescending(int[] array) {
+    // 18
+    public static void sortDescending(int[] array) {
         quickSort(array, 0, array.length - 1, false);
     }
 
-    public static void sortArrayOptionalOrder(int[] array, boolean isAscending) {
+    // 19
+    public static void sortOptionalOrder(int[] array, boolean isAscending) {
         quickSort(array, 0, array.length - 1, isAscending);
     }
 
+    // 20 - rewritten
     public static boolean containsDuplicates(byte[] array) {
-        boolean result = false;
-        int[] sortedArray = new int[array.length];
-        for (int i = 0; i < array.length; i++)
-            sortedArray[i] = (int) array[i];
-        quickSort(sortedArray, 0, sortedArray.length - 1, true);
-        for (int i = 0; i < sortedArray.length - 1; i++)
-            if (sortedArray[i] == sortedArray[i + 1]) {
-                result = true;
-                break;
-            }
+        boolean[] valuePresence = new boolean[128];
 
-        return result;
+        for (byte arrayItem : array) {
+            if (valuePresence[arrayItem]) {
+                return true;
+            } else {
+                valuePresence[arrayItem] = true;
+            }
+        }
+
+        return false;
     }
 
     public static void main(String... args) {
-        System.out.println("1. printCharArray testing: ");
-        char[] charArray = {'e','f','g','h','i','j','k'};
-        printCharArray(charArray);
 
-        System.out.println("\n\n2. print2DStringArray testing: ");
+        /*
+        System.out.println("1. print(char[]) testing: ");
+        char[] charArray = {'e','f','g','h','i','j','k'};
+        print(charArray);
+
+        System.out.println("\n\n2. print(String[][]) testing: ");
         String[][] string2DArray = {
                 {"abc", "def", "ghi"},
-                {"jkl", "mno", "pqr"},
+                {"jkl", "pqr"},
                 {"stu", "vwx", "yz"}
         };
-        print2DStringArray(string2DArray);
+        print(string2DArray);
 
-        System.out.println("\n\n3. intArrayToCharArray testing: ");
-        int[][] intArray = {{65, 67, 69, 71}, {66, 68, 70, 72}};
-        char[][] charArrayConverted = intArrayToCharArray(intArray);
+        System.out.println("\n\n3. convert(int[][]) testing: ");
+        int[][] intArray = {{65, 67, 71}, {66, 68, 70, 72}, {74, 75}};
+        char[][] charArrayConverted = convert(intArray);
         for (char[] charArrayRow : charArrayConverted) {
-            printCharArray(charArrayRow);
+            print(charArrayRow);
             System.out.println();
         }
 
-        System.out.println("\n\n4. intArrayInversion testing: ");
+        System.out.println("\n\n4. invert() testing: ");
         int[][] intArrayToInvert = {
                 {2, -6, 6, 4},
-                {7, 3, -1, 5},
-                {23, -73, 11, -43}
+                {7, 3, -1, 5, 17, -2},
+                {23, -73, -43}
         };
-        intArrayInversion(intArrayToInvert);
+        invert(intArrayToInvert);
         for (int[] invertedRow: intArrayToInvert) {
             for (int invertedInt : invertedRow)
                 System.out.print(invertedInt + " ");
             System.out.println();
         }
 
-        System.out.print("\n\n5. findGreatest(a, b) testing: ");
-        System.out.print(findGreatest(-5, 1));
+        System.out.print("\n\n5. max(a, b) testing: ");
+        System.out.print(max(-5, 1));
 
-        System.out.print("\n\n6. findGreatest(a, b, c) testing: ");
-        System.out.print(findGreatest(0, -6, 3));
+        System.out.print("\n\n6. max(a, b, c) testing: ");
+        System.out.print(max(0, -6, -3));
 
-        System.out.print("\n\n7. findGreatest(a, b, c, d, e) testing: ");
-        System.out.print(findGreatest(15, -16, 3, 9, 12));
+        System.out.print("\n\n7. max(a, b, c, d, e) testing: ");
+        System.out.print(max(15, -16, 3, 9, 12));
 
-        System.out.print("\n\n8. charArrayToString testing: ");
+        System.out.print("\n\n8. toString(char[]) testing: ");
         char[] charArrayRepresentation = {'z', 'y', 'x', 'w', 'v', 'u'};
-        System.out.print(charArrayToString(charArrayRepresentation));
+        System.out.print(toString(charArrayRepresentation));
 
-        System.out.print("\n\n9. isSubstring testing: ");
-        char[] charArrayWhole = {'a', 'b', 'c', 'c', 'd', 'e', 'f', 'g'};
+        System.out.print("\n\n9. contains() testing: ");
+        char[] charArrayWhole = {'a', 'b', 'c', 'c', 'd', 'd', 'e', 'f', 'g'};
         char[] charArrayPart = {'c', 'd', 'e'};
-        System.out.print(isSubstring(charArrayWhole, charArrayPart));
+        System.out.print(contains(charArrayWhole, charArrayPart));
+        */
 
-        System.out.print("\n\n10. findIntPosition testing: ");
+        System.out.print("\n\n10. indexOf() testing: ");
         int[] intArrayToLookup = {1, 2, 6, 2, 7, 12, 2, 9};
-        System.out.print(findIntPosition(intArrayToLookup, 2));
+        System.out.print(indexOf(intArrayToLookup, 2));
 
-        System.out.print("\n\n11. findIntPositionReverse testing: ");
-        System.out.print(findIntPositionReverse(intArrayToLookup, 2));
+        System.out.print("\n\n11. lastIndexOf() testing: ");
+        System.out.print(lastIndexOf(intArrayToLookup, 2));
 
-        System.out.print("\n\n12. factorial testing: ");
+        System.out.print("\n\n12. factorial() testing: ");
         System.out.print(factorial(6));
 
-        System.out.print("\n\n13. isLeapYear testing: ");
-        System.out.print(isLeapYear(2014));
+        System.out.print("\n\n13. isLeapYear() testing: ");
+        System.out.print(isLeapYear(2100));
 
-        System.out.println("\n\n14. filterBySubstring testing: ");
+        System.out.println("\n\n14. filterByPattern() testing: ");
         String[] stringArray = {"abcdef", "cdefghi", "fsddbdrjj", "wehdfnc", "gsssegb"};
-        String[] filteredArray = filterBySubstring(stringArray, "def");
+        String[] filteredArray = filterByPattern(stringArray, "def");
         for (String string: filteredArray) {
             System.out.println(string);
         }
 
-        System.out.println("\n\n15. printDivisibleElements testing: ");
+        System.out.println("\n\n15. printDivisible() testing: ");
         int[] arrayForDivisibilityCheck = {346, 111, 632, 9, 81};
-        printDivisibleElements(arrayForDivisibilityCheck, 3);
+        printDivisible(arrayForDivisibilityCheck, 3);
 
-        System.out.print("\n\n16. printRoundedDouble testing: ");
-        printRoundedDouble(0.6438124);
+        System.out.print("\n\n16. printRounded() testing: ");
+        printRounded(0.6438124);
 
-        System.out.println("\n\n17. sortArrayAscending testing: ");
+        System.out.println("\n\n17. sortAscending() testing: ");
         int[] arrayToSortAsc = {2, 4, 1, 3};
-        sortArrayAscending(arrayToSortAsc);
+        sortAscending(arrayToSortAsc);
         for (int arrayElement: arrayToSortAsc)
             System.out.print(arrayElement + " ");
 
-        System.out.println("\n\n18. sortArrayDescending testing: ");
+        System.out.println("\n\n18. sortDescending testing: ");
         int[] arrayToSortDesc = {4, 2, 7, 1, 2, 10};
-        sortArrayDescending(arrayToSortDesc);
+        sortDescending(arrayToSortDesc);
         for (int arrayElement: arrayToSortDesc)
             System.out.print(arrayElement + " ");
 
-        System.out.print("\n\n20. containsDuplicates testing: ");
-        byte[] arrayToCheckDuplicates = {4, 2, 7, 1, 10};
+        System.out.print("\n\n20. containsDuplicates() testing: ");
+        byte[] arrayToCheckDuplicates = {4, 2, 7, 1, 4, 10};
         System.out.println(containsDuplicates(arrayToCheckDuplicates));
     }
 }
