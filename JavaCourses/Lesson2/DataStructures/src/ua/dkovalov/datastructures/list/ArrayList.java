@@ -103,7 +103,13 @@ public class ArrayList implements List {
         return (indexOf(value) != -1);
     }
 
-    // TODO: equals
-    // TODO: toString
-
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder("]");
+        for (int i = 0; i < size(); i++) {
+            stringBuilder.append((i == 0 ? "" : ";") + arrayStorage[i]);
+        }
+        stringBuilder.append("]");
+        return stringBuilder.toString();
+    }
 }
