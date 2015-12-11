@@ -1,6 +1,7 @@
 package ua.dkovalov.datastructures.list;
 
-import org.junit.*;
+
+import org.junit.Test;
 import static org.junit.Assert.*;
 
 public abstract class AbstractListTest {

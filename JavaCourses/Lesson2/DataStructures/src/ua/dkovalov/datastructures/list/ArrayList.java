@@ -105,7 +105,7 @@ public class ArrayList implements List {
 
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder("]");
+        StringBuilder stringBuilder = new StringBuilder("[");
         for (int i = 0; i < size(); i++) {
             stringBuilder.append((i == 0 ? "" : ";") + arrayStorage[i]);
         }

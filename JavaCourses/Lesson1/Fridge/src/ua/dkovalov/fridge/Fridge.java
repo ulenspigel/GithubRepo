@@ -11,7 +11,7 @@ public class Fridge {
 
         //FridgeOpener fridgeOpener = new FridgeOpener(new FridgeLock(initialLevers));
         FridgeOpener fridgeOpener = new FridgeOpener();
-        fridgeOpener.generateRandomLock(3);
+        fridgeOpener.generateRandomLock(7);
         System.out.println("Fridge lock init state: \n" + fridgeOpener.getFridgeLock());
 
         fridgeOpener.open();
