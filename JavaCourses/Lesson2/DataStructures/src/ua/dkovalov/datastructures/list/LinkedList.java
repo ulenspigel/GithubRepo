@@ -151,6 +151,15 @@ public class LinkedList implements List {
         }
     }
 
-    // TODO: equals
-    // TODO: toString
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder("[");
+        Node node = first;
+        while (node != null) {
+            stringBuilder.append(node.value + (node.next == null ? "" : ";"));
+            node = node.next;
+        }
+        stringBuilder.append("]");
+        return stringBuilder.toString();
+    }
 }
