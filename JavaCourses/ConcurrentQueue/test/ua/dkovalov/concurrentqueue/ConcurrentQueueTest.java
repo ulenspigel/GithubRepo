@@ -19,7 +19,7 @@ public class ConcurrentQueueTest {
         for (int i = 0; i < ConcurrentQueue.CAPACITY; i++) {
             queue.push(new QueueElement(Thread.currentThread().getId(), i, "Queue element #" + i));
         }
-        executor = Executors.newFixedThreadPool(1);
+        executor = Executors.newSingleThreadExecutor();
     }
 
     @After
