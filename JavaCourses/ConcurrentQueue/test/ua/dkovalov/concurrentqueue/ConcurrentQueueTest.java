@@ -30,15 +30,12 @@ public class ConcurrentQueueTest {
     @Test
     public void testPush() throws InterruptedException {
         long startTime = System.nanoTime();
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    TimeUnit.SECONDS.sleep(THREAD_IDDLE_TIME);
-                    queue.pop();
-                } catch (InterruptedException ie) {
-                    throw new RuntimeException(ie);
-                }
+        executor.execute(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(THREAD_IDDLE_TIME);
+                queue.pop();
+            } catch (InterruptedException ie) {
+                throw new RuntimeException(ie);
             }
         });
         queue.push(new QueueElement(Thread.currentThread().getId(), ConcurrentQueue.CAPACITY, "Queue element #" + ConcurrentQueue.CAPACITY));
@@ -55,15 +52,12 @@ public class ConcurrentQueueTest {
         assertEquals(element.getElementNumber(), ConcurrentQueue.CAPACITY - 1);
         assertEquals(element.getThreadID(), Thread.currentThread().getId());
         long startTime = System.nanoTime();
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    TimeUnit.SECONDS.sleep(THREAD_IDDLE_TIME);
-                    queue.push(new QueueElement(Thread.currentThread().getId(), ConcurrentQueue.CAPACITY, "Queue element #" + ConcurrentQueue.CAPACITY));
-                } catch (InterruptedException ie) {
-                    throw new RuntimeException(ie);
-                }
+        executor.execute(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(THREAD_IDDLE_TIME);
+                queue.push(new QueueElement(Thread.currentThread().getId(), ConcurrentQueue.CAPACITY, "Queue element #" + ConcurrentQueue.CAPACITY));
+            } catch (InterruptedException ie) {
+                throw new RuntimeException(ie);
             }
         });
         element = queue.pop();

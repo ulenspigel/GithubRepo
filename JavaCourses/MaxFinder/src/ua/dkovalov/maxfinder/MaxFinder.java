@@ -1,9 +1,9 @@
 package ua.dkovalov.maxfinder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.function.Function;
 import java.util.stream.*;
 
 public class MaxFinder {
@@ -16,29 +16,44 @@ public class MaxFinder {
         }
 
         int numOfWorkers = Math.min(NUM_OF_CPU, (int) Math.ceil(list.size() / (float) ITEMS_PER_WORKER));
-        List<Future<E>> subResults = new ArrayList<>(numOfWorkers);
-        ExecutorService executor = Executors.newFixedThreadPool(numOfWorkers);
-        for (int i = 0; i < numOfWorkers; i++) {
-            int leftBound = i * list.size() / numOfWorkers;
-            int rightBound = (i + 1) * list.size() / numOfWorkers;
-            subResults.add(executor.submit(new Worker<>(list.subList(leftBound, rightBound))));
-        }
-        executor.shutdown();
-
-        // TODO: find a way to reuse Worker class
         E max = null;
-        try {
-            max = subResults.get(0).get();
-            for (int i = 1; i < subResults.size(); i++) {
-                E subResult = subResults.get(i).get();
-                if (subResult.compareTo(max) == 1) {
-                    max = subResult;
-                }
+        if (numOfWorkers == 1) {
+            max = new Worker<E>(list).call();
+        } else {
+            List<Future<E>> subResults = new ArrayList<>(numOfWorkers);
+            ExecutorService executor = Executors.newFixedThreadPool(numOfWorkers);
+            for (int i = 0; i < numOfWorkers; i++) {
+                int leftBound = i * list.size() / numOfWorkers;
+                int rightBound = (i + 1) * list.size() / numOfWorkers;
+                subResults.add(executor.submit(new Worker<>(list.subList(leftBound, rightBound))));
             }
-        } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+            executor.shutdown();
 
+            // TODO: find a way to reuse Worker class
+            /*try {
+                max = subResults.get(0).get();
+                for (int i = 1; i < subResults.size(); i++) {
+                    E subResult = subResults.get(i).get();
+                    if (subResult.compareTo(max) == 1) {
+                        max = subResult;
+                    }
+                }
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+            return max;*/
+
+            Function<Future<E>, E> futureResultGetter = (s) -> {
+                E result = null;
+                try {
+                    result = s.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
+                return result;
+            };
+            max = new Worker<E>(subResults.stream().map(futureResultGetter).collect(Collectors.toList())).call();
+        }
         return max;
     }
 
