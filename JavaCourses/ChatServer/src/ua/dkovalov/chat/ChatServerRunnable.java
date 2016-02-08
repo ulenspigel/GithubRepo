@@ -3,39 +3,21 @@ package ua.dkovalov.chat;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-public class ChatServer {
+public class ChatServerRunnable implements Runnable {
     private static int PORT = 2305;
+    ServerSocket serverSocket;
     private volatile List<ClientConnection> clients = new ArrayList<>();
     private List<String> messages = new ArrayList<>();
 
-    public ChatServer() {}
+    public ChatServerRunnable() {}
 
-    public void start() throws InterruptedException {
-        try (
-            ServerSocket serverSocket = new ServerSocket(PORT);
-        ){
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    // TODO: refactor in a separate function and replace anonymous class with lambda
-                    try {
-                        while (true) {
-                            clients.add(new ClientConnection(serverSocket.accept()));
-                        }
-                    } catch (IOException ioe) {
-                        throw new RuntimeException(ioe);
-                    }
-                }
-            }).start();
-
-            //clients.add(new ClientConnection(serverSocket.accept()));
-            //clients.add(new ClientConnection(serverSocket.accept()));
+    public void start() throws InterruptedException, IOException {
+        try {
+            serverSocket = new ServerSocket(PORT);
+            new Thread(this).start();
 
             while (true) {
                 // TODO: delete condition after debugging
@@ -46,11 +28,13 @@ public class ChatServer {
             }
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
+        } finally {
+            serverSocket.close();
         }
         // TODO: finally - free resources for each socket
     }
 
-    private void notifyClients() {
+    private synchronized void notifyClients() {
         if (messages.size() == 0) {
             return;
         }
@@ -64,7 +48,7 @@ public class ChatServer {
     }
 
     // TODO: turn method into synchronized to avoid adding new clients during the check
-    private void checkClientsMessages() {
+    private synchronized void checkClientsMessages() {
         // TODO: check if socket was disconnected
         String message;
         for (ClientConnection client : clients) {
@@ -81,6 +65,22 @@ public class ChatServer {
         }
     }
 
+    private synchronized void addClientConnection(Socket socket) throws IOException {
+        clients.add(new ClientConnection(socket));
+    }
+
+    @Override
+    public void run() {
+        try {
+            while (true) {
+                addClientConnection(serverSocket.accept());
+            }
+        } catch (IOException ioe) {
+            throw new RuntimeException(ioe);
+        }
+    }
+
+
     public static void main(String... args) throws InterruptedException {
         new ChatServer().start();
     }
@@ -96,26 +96,6 @@ public class ChatServer {
             this.socket = socket;
             input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             output = new PrintWriter(socket.getOutputStream(), true);
-        }
-    }
-
-    public class Message implements Serializable {
-        private int id;
-        private Date date;
-        private String content;
-
-        public Message(int id, Date date, String content) {
-            this.id = id;
-            this.date = date;
-            this.content = content;
-        }
-
-        public Message() {
-        }
-
-        @Override
-        public String toString() {
-            return "Id=" + id + "\nDate=" + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(date) + "\nContent=" + content;
         }
     }
 }
