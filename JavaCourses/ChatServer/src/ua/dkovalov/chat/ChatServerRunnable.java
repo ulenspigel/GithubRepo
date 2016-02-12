@@ -6,10 +6,10 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatServerRunnable implements Runnable {
-    private static int PORT = 2305;
+public class ChatServerRunnable /*implements Runnable*/ {
+    /*private static int PORT = 2305;
     ServerSocket serverSocket;
-    private volatile List<ClientConnection> clients = new ArrayList<>();
+    private volatile List<Connection> clients = new ArrayList<>();
     private List<String> messages = new ArrayList<>();
 
     public ChatServerRunnable() {}
@@ -39,7 +39,7 @@ public class ChatServerRunnable implements Runnable {
             return;
         }
         // TODO: check if socket was disconnected
-        for (ClientConnection client : clients) {
+        for (Connection client : clients) {
             for (String message : messages) {
                 client.output.println(">> " + message);
             }
@@ -51,7 +51,7 @@ public class ChatServerRunnable implements Runnable {
     private synchronized void checkClientsMessages() {
         // TODO: check if socket was disconnected
         String message;
-        for (ClientConnection client : clients) {
+        for (Connection client : clients) {
             try {
                 //while ((message = client.input.readLine()) != null) {
                 if (client.socket.getInputStream().available() > 0) {
@@ -66,7 +66,7 @@ public class ChatServerRunnable implements Runnable {
     }
 
     private synchronized void addClientConnection(Socket socket) throws IOException {
-        clients.add(new ClientConnection(socket));
+        clients.add(new Connection(socket));
     }
 
     @Override
@@ -80,22 +80,7 @@ public class ChatServerRunnable implements Runnable {
         }
     }
 
-
-    public static void main(String... args) throws InterruptedException {
-        new ChatServer().start();
-    }
-
-    private static class ClientConnection {
-        static long clientId = 0;
-        Socket socket;
-        BufferedReader input;
-        PrintWriter output;
-
-        public ClientConnection(Socket socket) throws IOException {
-            clientId++;
-            this.socket = socket;
-            input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            output = new PrintWriter(socket.getOutputStream(), true);
-        }
-    }
+    public static void main(String... args) throws InterruptedException, IOException {
+        new ChatServerRunnable().start();
+    }*/
 }
