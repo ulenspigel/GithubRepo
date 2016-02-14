@@ -1,16 +1,20 @@
-package ua.dkovalov.chat;
+package ua.dkovalov.chat.server;
+
+import ua.dkovalov.chat.Connection;
+import ua.dkovalov.chat.IMessage;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatServerController {
+public class ChatServerController<E extends IMessage> {
     private static int PORT = 2305;
     ServerSocket serverSocket;
-    private volatile List<Connection> clients = new ArrayList<>();
-    private List<Message> messages = new ArrayList<>();
+    private volatile List<Connection<E>> clients = new ArrayList<>();
+    private List<E> messages = new ArrayList<>();
 
     public ChatServerController() {}
 
@@ -23,8 +27,10 @@ public class ChatServerController {
     }
 
     public void close() {
-        // TODO: finalize all the connections & dispose their io streams
         try {
+            for (Connection<E> client : clients) {
+                client.close();
+            }
             serverSocket.close();
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
@@ -44,18 +50,26 @@ public class ChatServerController {
         if (messages.size() == 0) {
             return;
         }
-        // TODO: check if socket was disconnected (functionality in Connection class)
-        for (Connection client : clients) {
-            client.sendMessages(messages);
+        for (Connection<E> client : clients) {
+            if (!client.isDisconnected()) {
+                client.sendMessages(messages);
+            }
         }
         messages.clear();
     }
 
     synchronized void receiveMessages() {
         // TODO: check if socket was disconnected (functionality in Connection class)
-        for (Connection client : clients) {
-            while (client.hasUnreadData()) {
-                messages.add(client.receiveMessage());
+        for (int i = 0; i < clients.size(); i++) {
+            Connection<E> client = clients.get(i);
+            if (client.isDisconnected()) {
+                System.out.println("Before connection removing");
+                clients.remove(i);
+                System.out.println("After connection removing");
+            } else {
+                while (client.hasUnreadData()) {
+                    messages.add(client.receiveMessage());
+                }
             }
         }
     }
@@ -63,9 +77,7 @@ public class ChatServerController {
     public void listenConnections() {
         while (true) {
             try {
-                System.out.println("Before acceptance");
                 addClientConnection(serverSocket.accept());
-                System.out.println("Connection accepted");
             } catch (IOException ioe) {
                 throw new RuntimeException(ioe);
             }
@@ -73,6 +85,6 @@ public class ChatServerController {
     }
 
     private synchronized void addClientConnection(Socket socket) throws IOException {
-        clients.add(new Connection(socket));
+        clients.add(new Connection<>(socket));
     }
 }

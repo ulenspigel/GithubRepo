@@ -1,8 +1,10 @@
-package ua.dkovalov.chat;
+package ua.dkovalov.chat.server;
+
+import ua.dkovalov.chat.Message;
 
 public class ChatServer {
     public static void start() {
-        ChatServerController controller = new ChatServerController();
+        ChatServerController<Message> controller = new ChatServerController<>();
         try {
             controller.open();
             new Thread(() -> controller.listenConnections()).start();
