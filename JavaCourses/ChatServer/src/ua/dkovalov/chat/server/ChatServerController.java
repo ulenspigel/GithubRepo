@@ -14,6 +14,7 @@ public class ChatServerController<E extends IMessage> {
     private static int PORT = 2305;
     ServerSocket serverSocket;
     private volatile List<Connection<E>> clients = new ArrayList<>();
+    // TODO: priority collection
     private List<E> messages = new ArrayList<>();
 
     public ChatServerController() {}
