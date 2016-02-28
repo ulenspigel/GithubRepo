@@ -5,7 +5,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import ua.dkovalov.socialnetwork.entity.User;
 
-// TODO: session pooling
+//TODO: session pooling
 public class UserDAO {
     private final static SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 

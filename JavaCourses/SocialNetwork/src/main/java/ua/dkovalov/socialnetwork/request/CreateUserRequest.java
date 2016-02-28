@@ -6,6 +6,7 @@ User entity: last name; first name; nickname; birth date; gender; is active; cre
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ua.dkovalov.socialnetwork.entity.User;
+import ua.dkovalov.socialnetwork.entity.UserType;
 
 import java.io.IOException;
 
@@ -20,6 +21,7 @@ public class CreateUserRequest {
     public void parseRequest() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         user = mapper.readValue(requestMessage, User.class);
+        user.setUserType(UserType.USER);
     }
 
     public User getUser() {

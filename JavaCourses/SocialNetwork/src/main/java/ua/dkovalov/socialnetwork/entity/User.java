@@ -3,42 +3,52 @@ package ua.dkovalov.socialnetwork.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "SN.T_USER")
+@Table(name = "T_USER")
 public class User {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
     Integer userId;
-    @Column(name = "first_name")
     String firstName;
-    @Column(name = "last_name")
     String lastName;
-    @Column(name = "nickname")
     String nickname;
-    /*Gender gender;
-    UserType userType;*/
+    Gender gender;
+    UserType userType;
 
     public User() {
     }
 
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    public Integer getUserId() {
+        return userId;
+    }
+
+    @Column(name = "first_name")
     public String getFirstName() {
         return firstName;
     }
 
+    @Column(name = "last_name")
     public String getLastName() {
         return lastName;
     }
 
+    @Column(name = "nickname")
     public String getNickname() {
         return nickname;
     }
 
-    /*public Gender getGender() {
-        return gender;
+    @Column(name = "gender")
+    public char getGender() {
+        return gender.forPersistence();
     }
 
-    public UserType getUserType() {
-        return userType;
-    }*/
+    @Column(name = "user_type_id")
+    public int getUserType() {
+        return userType.forPersistence();
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -52,11 +62,13 @@ public class User {
         this.nickname = nickname;
     }
 
-    /*public void setGender(String gender) {
+    public void setGender(String gender) {
         this.gender = Gender.valueOf(gender);
     }
 
-    public void setUserType(String userType) {
-        this.userType = UserType.valueOf(userType);
-    }*/
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
+
+    //TODO: find information about the necessity of hasCode and equals methods
 }
