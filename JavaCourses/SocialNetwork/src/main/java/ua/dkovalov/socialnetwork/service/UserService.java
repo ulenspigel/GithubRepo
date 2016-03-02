@@ -1,7 +1,6 @@
 package ua.dkovalov.socialnetwork.service;
 
 import ua.dkovalov.socialnetwork.dao.UserDAO;
-import ua.dkovalov.socialnetwork.entity.User;
 import ua.dkovalov.socialnetwork.request.CreateUserRequest;
 
 public class UserService {

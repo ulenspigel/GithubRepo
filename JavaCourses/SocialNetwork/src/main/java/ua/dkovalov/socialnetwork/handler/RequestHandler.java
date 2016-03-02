@@ -1,19 +1,16 @@
 package ua.dkovalov.socialnetwork.handler;
 
-import ua.dkovalov.socialnetwork.request.CreateUserRequest;
-import ua.dkovalov.socialnetwork.service.UserService;
+import ua.dkovalov.socialnetwork.request.AbstractRequest;
 import ua.dkovalov.socialnetwork.handler.util.RequestMapper;
 
 import java.io.IOException;
 
 //TODO: configure log4j
 //TODO: add logging everywhere
-//TODO: implement common format for JSON requests
 public class RequestHandler {
     public void acceptRequest(String messageBody) throws IOException {
-        RequestMapper requestMapper = new RequestMapper(messageBody);
-        CreateUserRequest createUserRequest = requestMapper.mapRequest();
-        UserService.createUser(createUserRequest);
+        AbstractRequest request = RequestMapper.mapRequest(messageBody);
+        request.process();
     }
 
     public static void main(String[] args) throws IOException {

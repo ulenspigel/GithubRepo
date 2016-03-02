@@ -12,8 +12,11 @@ public class UserDAO {
     public static void saveUser(User user) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        session.save(user);
-        session.getTransaction().commit();
-        session.close();
+        try {
+            session.save(user);
+            session.getTransaction().commit();
+        } finally {
+            session.close();
+        }
     }
 }
