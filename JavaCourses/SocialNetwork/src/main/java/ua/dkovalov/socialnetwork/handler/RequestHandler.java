@@ -1,16 +1,21 @@
 package ua.dkovalov.socialnetwork.handler;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import java.io.IOException;
 import ua.dkovalov.socialnetwork.request.AbstractRequest;
 import ua.dkovalov.socialnetwork.handler.util.RequestMapper;
 
-import java.io.IOException;
-
-//TODO: configure log4j
-//TODO: add logging everywhere
+//TODO: use markers in debug logging
 public class RequestHandler {
+    private static Logger logger = LogManager.getLogger(RequestHandler.class.getName());
+
     public void acceptRequest(String messageBody) throws IOException {
+        logger.entry();
+        logger.debug("Body of the received message:\n" + messageBody);
         AbstractRequest request = RequestMapper.mapRequest(messageBody);
         request.process();
+        logger.exit();
     }
 
     public static void main(String[] args) throws IOException {

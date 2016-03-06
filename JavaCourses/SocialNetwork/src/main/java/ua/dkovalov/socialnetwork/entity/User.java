@@ -5,12 +5,12 @@ import javax.persistence.*;
 @Entity
 @Table(name = "T_USER")
 public class User {
-    Integer userId;
-    String firstName;
-    String lastName;
-    String nickname;
-    Gender gender;
-    UserType userType;
+    private Integer userId;
+    private String firstName;
+    private String lastName;
+    private String nickname;
+    private Gender gender;
+    private UserType userType;
 
     public User() {
     }
@@ -68,6 +68,17 @@ public class User {
 
     public void setUserType(UserType userType) {
         this.userType = userType;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", gender=" + gender +
+                ", userType=" + userType +
+                '}';
     }
 
     //TODO: find information about the necessity of hasCode and equals methods

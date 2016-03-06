@@ -2,22 +2,37 @@ package ua.dkovalov.socialnetwork.handler.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ua.dkovalov.socialnetwork.request.*;
 import java.io.IOException;
 
 public class RequestMapper {
-    //TODO: handle IOException
-    public static AbstractRequest mapRequest(String messageBody) throws IOException {
+    private static Logger logger = LogManager.getLogger(RequestMapper.class.getName());
+    public static AbstractRequest mapRequest(String messageBody) {
         ObjectMapper mapper = new ObjectMapper();
-        //TODO: handle enum matching error
-        MessageFields fields = mapper.readValue(messageBody, MessageFields.class);
+        MessageFields fields = null;
+        try {
+            fields = mapper.readValue(messageBody, MessageFields.class);
+        } catch (IOException ioe) {
+            logger.error("Unable to recognize request type for message:\n" + messageBody);
+            throw new RuntimeException(ioe);
+        }
+        logger.info("Request type recognized: " + fields.getType() + ". Submitter is: " + fields.getSubmitter());
         AbstractRequest request = null;
         switch (fields.getType()) {
-            case CREATE_USER: request = new CreateUserRequest(fields.getSubmitter(), fields.getRequest().toString());
-                              break;
-            case DELETE_USER: break;
+            case CREATE_USER:
+                request = new CreateUserRequest(fields.getSubmitter(), fields.getRequest().toString());
+                break;
+            case DELETE_USER:
+                break;
         }
-        request.parseRequest();
+        try {
+            request.parseRequest();
+        } catch (IOException ioe) {
+            logger.error("Unable to parse request:\n" + request.getRequestMessage());
+            throw new RuntimeException(ioe);
+        }
         return request;
     }
 

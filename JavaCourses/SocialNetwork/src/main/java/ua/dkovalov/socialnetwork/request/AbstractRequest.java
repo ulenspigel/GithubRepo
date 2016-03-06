@@ -19,7 +19,6 @@ public abstract class AbstractRequest {
         return requestMessage;
     }
 
-    //TODO: handle IOException
     public abstract void parseRequest() throws IOException;
 
     public abstract void process();
