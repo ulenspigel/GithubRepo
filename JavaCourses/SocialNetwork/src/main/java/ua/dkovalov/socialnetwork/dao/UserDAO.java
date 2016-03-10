@@ -14,17 +14,17 @@ public class UserDAO {
 
     public static void saveUser(User user) {
         Session session = sessionFactory.openSession();
-        logger.debug("Inserting an entry to T_USER:\n" + user);
+        logger.info("Inserting an entry to T_USER:\n" + user);
         session.beginTransaction();
-        logger.debug("Transaction started");
+        logger.info("Transaction started");
         try {
             session.save(user);
-            logger.debug("Entry inserted");
+            logger.info("Entry inserted");
             session.getTransaction().commit();
-            logger.debug("Transaction committed");
+            logger.info("Transaction committed");
         } finally {
             session.close();
-            logger.debug("Session closed");
+            logger.info("Session closed");
         }
     }
 }

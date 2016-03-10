@@ -1,10 +1,10 @@
 {
   "type":"CREATE_USER",
   "submitter":"admin",
-  "request":{
-    "firstName":"First",
-"lastName":"Last",
-"nickname":"nickname",
-"gender":"MALE"
-}
+  "request": {
+              "firstName":"First",
+              "lastName":"Last",
+              "nickname":"nickname",
+              "gender":"MALE"
+            }
 }
