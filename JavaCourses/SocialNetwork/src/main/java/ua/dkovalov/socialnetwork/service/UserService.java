@@ -2,6 +2,7 @@ package ua.dkovalov.socialnetwork.service;
 
 import ua.dkovalov.socialnetwork.dao.UserDAO;
 import ua.dkovalov.socialnetwork.request.CreateUserRequest;
+import ua.dkovalov.socialnetwork.request.DeleteUserRequest;
 
 public class UserService {
     public static void createUser(CreateUserRequest request) {
@@ -10,7 +11,7 @@ public class UserService {
         UserDAO.saveUser(request.getUser());
     }
 
-    public static void deleteUser() {
-
+    public static void deleteUser(DeleteUserRequest request) {
+        UserDAO.deleteUser(request.getUser());
     }
 }

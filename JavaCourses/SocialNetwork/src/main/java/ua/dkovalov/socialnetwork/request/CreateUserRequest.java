@@ -27,9 +27,11 @@ public class CreateUserRequest extends AbstractRequest {
 
     @Override
     public void process() {
-        //TODO: add fields "is active" and "creation date" and move setting of all these fields into a separate method
+        //TODO: add fields "is active" and "creation date" and move setting all of these fields into a separate method
         user.setUserType(UserType.USER);
+        logger.info("Before user creation");
         UserService.createUser(this);
+        logger.info("After user creation");
     }
 
     public User getUser() {

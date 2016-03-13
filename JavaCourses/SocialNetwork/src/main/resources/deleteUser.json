@@ -1,0 +1,7 @@
+{
+  "type"     : "DELETE_USER",
+  "submitter": "admin",
+  "request"  : {
+                 "nickname" : "nickname"
+               }
+}

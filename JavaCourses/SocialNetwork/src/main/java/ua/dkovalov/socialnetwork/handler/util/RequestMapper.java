@@ -9,6 +9,7 @@ import java.io.IOException;
 
 public class RequestMapper {
     private static Logger logger = LogManager.getLogger(RequestMapper.class.getName());
+
     public static AbstractRequest mapRequest(String messageBody) {
         ObjectMapper mapper = new ObjectMapper();
         MessageFields fields = null;
@@ -25,6 +26,7 @@ public class RequestMapper {
                 request = new CreateUserRequest(fields.getSubmitter(), fields.getRequest().toString());
                 break;
             case DELETE_USER:
+                request = new DeleteUserRequest(fields.getSubmitter(), fields.getRequest().toString());
                 break;
         }
         try {

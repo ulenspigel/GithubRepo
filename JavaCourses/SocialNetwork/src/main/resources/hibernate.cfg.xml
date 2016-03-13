@@ -10,6 +10,7 @@
         <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/socialnetwork</property>
         <property name="hibernate.connection.username">postgres</property>
         <property name="hibernate.connection.password">173078</property>
+        <property name="hibernate.connection.pool_size">5</property>
 
         <property name="hibernate.default_schema">SN</property>
 
