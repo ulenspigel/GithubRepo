@@ -22,5 +22,6 @@
 
         <!-- Annotated entity classes -->
         <mapping class="ua.dkovalov.socialnetwork.entity.User"/>
+        <mapping class="ua.dkovalov.socialnetwork.entity.UserType"/>
     </session-factory>
 </hibernate-configuration>

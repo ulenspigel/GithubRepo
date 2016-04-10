@@ -2,7 +2,7 @@
 <Configuration>
     <Appenders>
         <Console name="Console">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n" />
         </Console>
         <RollingFile name="RollingFile" fileName="SocialNetwork/log/app.log" filePattern="SocialNetwork/log/app-%i.log">
             <PatternLayout>
@@ -18,10 +18,10 @@
         <Root level="info">
             <AppenderRef ref="Console"/>
         </Root>
-        <logger name="ua.dkovalov.socialnetwork" level="info">
+        <logger name="ua.dkovalov.socialnetwork" level="debug">
             <AppenderRef ref="RollingFile"/>
         </logger>
-        <logger name="org.hibernate" level="error">
+        <logger name="org.hibernate" level="warn">
             <AppenderRef ref="RollingFile"/>
         </logger>
     </Loggers>

@@ -1,6 +1,6 @@
 {
   "type"     : "CREATE_USER",
-  "submitter": "admin",
+  "submitter": "jfggjf",
   "request"  : {
     "firstName": "First2",
     "lastName" : "Last2",

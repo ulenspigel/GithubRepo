@@ -3,15 +3,22 @@ package ua.dkovalov.socialnetwork.service;
 import ua.dkovalov.socialnetwork.dao.UserDAO;
 import ua.dkovalov.socialnetwork.request.CreateUserRequest;
 import ua.dkovalov.socialnetwork.request.DeleteUserRequest;
+import ua.dkovalov.socialnetwork.validator.UserRequestValidator;
 
 public class UserService {
-    public static void createUser(CreateUserRequest request) {
-        //TODO: refer to validator: no such user already exists;
-        //TODO: user who are submitting request has admin role
+    private UserRequestValidator validator = new UserRequestValidator();
+
+    public void createUser(CreateUserRequest request) {
+        validator.setRequest(request);
+        validator.validateSubmitter();
+        validator.checkNicknameUniqueness();
         UserDAO.saveUser(request.getUser());
     }
 
-    public static void deleteUser(DeleteUserRequest request) {
+    public void deleteUser(DeleteUserRequest request) {
+        validator.setRequest(request);
+        validator.validateSubmitter();
+        validator.checkAlreadyExists();
         UserDAO.deleteUser(request.getUser());
     }
 }

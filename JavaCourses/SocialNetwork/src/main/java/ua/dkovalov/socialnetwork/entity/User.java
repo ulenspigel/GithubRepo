@@ -3,7 +3,7 @@ package ua.dkovalov.socialnetwork.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "T_USER")
+@Table(name = "t_user")
 public class User {
     private Integer userId;
     private String firstName;
@@ -12,10 +12,10 @@ public class User {
     private Gender gender;
     private UserType userType;
 
-    public User() {
-    }
+    public User() {}
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     public Integer getUserId() {
         return userId;
@@ -41,9 +41,10 @@ public class User {
         return gender.forPersistence();
     }
 
-    @Column(name = "user_type_id")
-    public int getUserType() {
-        return userType.forPersistence();
+    @ManyToOne
+    @JoinColumn(name = "user_type_id")
+    public UserType getUserType() {
+        return userType;
     }
 
     public void setUserId(Integer userId) {
@@ -59,7 +60,7 @@ public class User {
     }
 
     public void setNickname(String nickname) {
-        this.nickname = nickname;
+        this.nickname = nickname.toUpperCase();
     }
 
     public void setGender(String gender) {
@@ -80,6 +81,4 @@ public class User {
                 ", userType=" + userType +
                 '}';
     }
-
-    //TODO: find information about the necessity of hasCode and equals methods
 }

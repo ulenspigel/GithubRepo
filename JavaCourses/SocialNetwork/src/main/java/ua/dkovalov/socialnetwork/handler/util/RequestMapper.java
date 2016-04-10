@@ -33,7 +33,7 @@ public class RequestMapper {
             request.parseRequest();
         } catch (IOException ioe) {
             logger.error("Unable to parse request:\n" + request.getRequestMessage());
-            throw new RuntimeException(ioe);
+            throw new UnsupportedOperationException(ioe);
         }
         return request;
     }

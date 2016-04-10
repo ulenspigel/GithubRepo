@@ -6,7 +6,7 @@ import ua.dkovalov.socialnetwork.service.UserService;
 
 import java.io.IOException;
 
-public class DeleteUserRequest extends AbstractRequest {
+public class DeleteUserRequest extends AbstractRequest implements IUserMaintenanceRequest {
     //TODO: logging
     private User user;
 
@@ -16,7 +16,8 @@ public class DeleteUserRequest extends AbstractRequest {
 
     @Override
     public void process() {
-        UserService.deleteUser(this);
+        UserService userService = new UserService();
+        userService.deleteUser(this);
     }
 
     @Override
@@ -25,6 +26,7 @@ public class DeleteUserRequest extends AbstractRequest {
         user = mapper.readValue(requestMessage, User.class);
     }
 
+    @Override
     public User getUser() {
         return user;
     }
