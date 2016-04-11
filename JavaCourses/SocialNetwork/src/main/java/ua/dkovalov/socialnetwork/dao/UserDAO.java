@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import ua.dkovalov.socialnetwork.dao.util.DAOUtil;
 import ua.dkovalov.socialnetwork.entity.User;
 import ua.dkovalov.socialnetwork.entity.UserType;
 

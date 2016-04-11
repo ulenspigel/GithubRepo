@@ -5,7 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import ua.dkovalov.socialnetwork.dao.util.DAOUtil;
+import ua.dkovalov.socialnetwork.dao.DAOUtil;
 import ua.dkovalov.socialnetwork.request.AbstractRequest;
 import ua.dkovalov.socialnetwork.handler.util.RequestMapper;
 
