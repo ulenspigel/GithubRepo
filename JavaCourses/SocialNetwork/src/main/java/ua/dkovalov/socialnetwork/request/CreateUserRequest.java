@@ -27,16 +27,15 @@ public class CreateUserRequest extends AbstractRequest implements IUserMaintenan
     }
 
     private void setCalculatedFields() {
-        //TODO: add fields "is active" and "creation date"
         user.setUserType(END_USER_TYPE);
     }
 
     @Override
     public void process() {
-        logger.info("Processing user creation request");
+        logger.info("Processing user creation request (nickname = " + user.getNickname() + ")");
         setCalculatedFields();
-        UserService userService = new UserService();
-        userService.createUser(this);
+        UserService userService = new UserService(this);
+        userService.createUser();
     }
 
     @Override

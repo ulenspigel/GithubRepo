@@ -2,12 +2,14 @@ package ua.dkovalov.socialnetwork.dao;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import ua.dkovalov.socialnetwork.entity.User;
 import ua.dkovalov.socialnetwork.entity.UserType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAO {
@@ -27,7 +29,7 @@ public class UserDAO {
             logger.error("Error during insertion:", he);
             throw he;
         } finally {
-            session.close();
+            DAOUtil.releaseSession(session);
         }
     }
 
@@ -65,16 +67,23 @@ public class UserDAO {
     public static boolean isUserAdmin(String submitter) {
         User user = fetchUserByNickname(submitter);
         if (user == null) {
-            return false;
+            RuntimeException exception = new RuntimeException("Request submitter " + submitter + " was not recognized as user.");
+            logger.error(exception.getMessage());
+            throw exception;
         }
         return user.getUserType().getBrief().equals(ADMIN_BRIEF);
     }
 
-    public static User fetchUserByNickname(String nickname){
-        // TODO: isActive flag
+    public static User fetchUserByNickname(String nickname) {
         User user = null;
-        List users = DAOUtil.openSession().createCriteria(User.class).add(Restrictions.eq("nickname", nickname.toUpperCase())).
-                setReadOnly(true).list();
+        List users;
+        try {
+            users = DAOUtil.openSession().createCriteria(User.class).add(Restrictions.eq("nickname", nickname.toUpperCase())).list();
+        } catch (HibernateException he) {
+            logger.error("Unable to fetch the user that corresponds to request submitter: " + he.getMessage());
+            throw he;
+        }
+
         if (users.size() > 1) {
             RuntimeException exception = new RuntimeException("Uniqueness was violated for a nickname " + nickname);
             logger.error(exception.getMessage());
@@ -82,6 +91,8 @@ public class UserDAO {
         } else if (users.size() == 1) {
             user = (User) users.get(0);
         }
+
         return user;
     }
+
 }

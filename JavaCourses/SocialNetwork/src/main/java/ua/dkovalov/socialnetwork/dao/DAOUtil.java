@@ -8,8 +8,11 @@ public class DAOUtil {
     private final static SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 
     public static Session openSession() {
-        //dummy
         return sessionFactory.openSession();
+    }
+
+    public static void releaseSession(Session session) {
+        session.close();
     }
 
     public static void closeSessionFactory() {

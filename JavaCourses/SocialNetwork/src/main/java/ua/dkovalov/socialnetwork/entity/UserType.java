@@ -48,14 +48,4 @@ public class UserType {
                 ", brief='" + brief + '\'' +
                 '}';
     }
-
-    // TODO: refactor
-    /*ADMIN(1), USER(2);
-    private int persistingValue;
-    private UserType(int persistingValue) {
-        this.persistingValue = persistingValue;
-    }
-    public int forPersistence() {
-        return persistingValue;
-    }*/
 }

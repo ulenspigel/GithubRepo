@@ -1,14 +1,14 @@
 package ua.dkovalov.socialnetwork.entity;
 
 public enum Gender {
-    MALE('M'), FEMALE('F');
+    M("M"), F("F");
 
-    private char persistingValue;
-    Gender(char persistingValue) {
+    private String persistingValue;
+    Gender(String persistingValue) {
         this.persistingValue = persistingValue;
     }
 
-    public char forPersistence() {
+    public String forPersistence() {
         return persistingValue;
     }
 }

@@ -37,7 +37,7 @@ public class User {
     }
 
     @Column(name = "gender")
-    public char getGender() {
+    public String getGender() {
         return gender.forPersistence();
     }
 
