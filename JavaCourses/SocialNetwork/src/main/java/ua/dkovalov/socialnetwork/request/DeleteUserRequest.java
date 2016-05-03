@@ -19,7 +19,6 @@ public class DeleteUserRequest extends AbstractRequest implements IUserMaintenan
     @Override
     public void process() {
         logger.info("Processing user deletion request (nickname = " + user.getNickname() + ")");
-        //logger.
         UserService userService = new UserService(this);
         userService.deleteUser();
     }

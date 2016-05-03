@@ -28,6 +28,12 @@ public class RequestMapper {
             case DELETE_USER:
                 request = new DeleteUserRequest(fields.getSubmitter(), fields.getRequest().toString());
                 break;
+            case CREATE_POST:
+                request = new CreatePostRequest(fields.getSubmitter(), fields.getRequest().toString());
+                break;
+            case DELETE_POST:
+                request = new DeletePostRequest(fields.getSubmitter(), fields.getRequest().toString());
+                break;
         }
         try {
             request.parseRequest();
