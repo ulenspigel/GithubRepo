@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ua.dkovalov.socialnetwork.request.*;
 import java.io.IOException;
+import org.joda.time.DateTime;
+import org.joda.time.format.ISODateTimeFormat;
+import ua.dkovalov.socialnetwork.request.*;
 
 public class RequestMapper {
-    private static Logger logger = LogManager.getLogger(RequestMapper.class.getName());
+    private static final Logger logger = LogManager.getLogger(RequestMapper.class);
 
     public static AbstractRequest mapRequest(String messageBody) {
         ObjectMapper mapper = new ObjectMapper();
@@ -29,7 +31,7 @@ public class RequestMapper {
                 request = new DeleteUserRequest(fields.getSubmitter(), fields.getRequest().toString());
                 break;
             case CREATE_POST:
-                request = new CreatePostRequest(fields.getSubmitter(), fields.getRequest().toString());
+                request = new CreatePostRequest(fields.getSubmitter(), fields.getRequest().toString(), fields.getSubmissionTime());
                 break;
             case DELETE_POST:
                 request = new DeletePostRequest(fields.getSubmitter(), fields.getRequest().toString());
@@ -51,6 +53,7 @@ public class RequestMapper {
     private static class MessageFields {
         private RequestType type;
         private String submitter;
+        private DateTime submissionTime;
         private JsonNode request;
 
         public MessageFields() {
@@ -62,6 +65,10 @@ public class RequestMapper {
 
         public void setSubmitter(String submitter) {
             this.submitter = submitter;
+        }
+
+        public void setSubmissionTime(String jsonDate) {
+            submissionTime = DateTime.parse(jsonDate, ISODateTimeFormat.dateTime());
         }
 
         public void setRequest(JsonNode request) {
@@ -76,8 +83,13 @@ public class RequestMapper {
             return submitter;
         }
 
+        public DateTime getSubmissionTime() {
+            return submissionTime;
+        }
+
         public JsonNode getRequest() {
             return request;
         }
+
     }
 }

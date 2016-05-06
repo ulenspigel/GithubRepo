@@ -3,31 +3,33 @@ package ua.dkovalov.socialnetwork.service;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.dkovalov.socialnetwork.dao.UserDAO;
-import ua.dkovalov.socialnetwork.request.IUserMaintenanceRequest;
+import ua.dkovalov.socialnetwork.entity.User;
+import ua.dkovalov.socialnetwork.request.AbstractRequest;
 import ua.dkovalov.socialnetwork.validator.UserRequestValidator;
 
 public class UserService {
-    private static Logger logger = LogManager.getLogger(UserService.class.getName());
+    private static final Logger logger = LogManager.getLogger(UserService.class);
     private UserRequestValidator validator;
-    private IUserMaintenanceRequest request;
+    private AbstractRequest<User> request;
 
-    public UserService(IUserMaintenanceRequest request) {
+    public UserService(AbstractRequest<User> request) {
         this.request = request;
-        validator = new UserRequestValidator();
-        validator.setRequest(request);
+        validator = new UserRequestValidator(request);
     }
 
     public void createUser() {
-        logger.info("Validating user creation request");
-        validator.validateSubmitter();
+        validator.validateSubmitterIsAdmin();
         validator.checkNicknameUniqueness();
-        UserDAO.saveUser(request.getUser());
+        logger.info("Request for user creation has been validated");
+        UserDAO.saveUser(request.getParsedObject());
+        logger.info("User data has been persisted in database");
     }
 
     public void deleteUser() {
-        logger.info("Validating user deletion request");
-        validator.validateSubmitter();
+        validator.validateSubmitterIsAdmin();
         validator.checkAlreadyExists();
-        UserDAO.deleteUser(request.getUser());
+        logger.info("Request for user deletion has been validated");
+        UserDAO.deleteUser(request.getParsedObject());
+        logger.info("User data has been deleted from database");
     }
 }

@@ -1,0 +1,9 @@
+{
+  "type"          : "CREATE_POST",
+  "submitter"     : "nickname",
+  "submissionTime": "2016-05-06T13:30:35.000Z",
+  "request"       : {
+    "postTitle"  : "Title",
+    "postContent": "Post Content"
+  }
+}

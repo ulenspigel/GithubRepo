@@ -2,7 +2,7 @@ package ua.dkovalov.socialnetwork.request;
 
 import java.io.IOException;
 
-public abstract class AbstractRequest {
+public abstract class AbstractRequest<T> {
     protected String submitter;
     protected String requestMessage;
 
@@ -22,4 +22,6 @@ public abstract class AbstractRequest {
     public abstract void parseRequest() throws IOException;
 
     public abstract void process();
+
+    public abstract T getParsedObject();
 }

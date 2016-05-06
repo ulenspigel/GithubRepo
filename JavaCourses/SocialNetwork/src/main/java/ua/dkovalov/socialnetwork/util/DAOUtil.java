@@ -1,4 +1,4 @@
-package ua.dkovalov.socialnetwork.dao;
+package ua.dkovalov.socialnetwork.util;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

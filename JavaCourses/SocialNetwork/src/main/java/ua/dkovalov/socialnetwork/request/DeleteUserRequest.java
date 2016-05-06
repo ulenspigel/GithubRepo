@@ -8,8 +8,8 @@ import ua.dkovalov.socialnetwork.service.UserService;
 
 import java.io.IOException;
 
-public class DeleteUserRequest extends AbstractRequest implements IUserMaintenanceRequest {
-    private static Logger logger = LogManager.getLogger(DeleteUserRequest.class.getName());
+public class DeleteUserRequest extends AbstractRequest<User> {
+    private static final Logger logger = LogManager.getLogger(DeleteUserRequest.class);
     private User user;
 
     public DeleteUserRequest(String submitter, String requestMessage) {
@@ -32,7 +32,7 @@ public class DeleteUserRequest extends AbstractRequest implements IUserMaintenan
     }
 
     @Override
-    public User getUser() {
+    public User getParsedObject() {
         return user;
     }
 }

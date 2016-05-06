@@ -9,8 +9,8 @@ import ua.dkovalov.socialnetwork.entity.UserType;
 import ua.dkovalov.socialnetwork.service.UserService;
 import java.io.IOException;
 
-public class CreateUserRequest extends AbstractRequest implements IUserMaintenanceRequest {
-    private static Logger logger = LogManager.getLogger(CreateUserRequest.class.getName());
+public class CreateUserRequest extends AbstractRequest<User> {
+    private static final Logger logger = LogManager.getLogger(CreateUserRequest.class);
     private static final UserType END_USER_TYPE = UserDAO.fetchEndUserType();
     private User user;
 
@@ -26,20 +26,20 @@ public class CreateUserRequest extends AbstractRequest implements IUserMaintenan
         logger.info("CREATE USER request has been parsed");
     }
 
-    private void setCalculatedFields() {
+    private void calculateFields() {
         user.setUserType(END_USER_TYPE);
     }
 
     @Override
     public void process() {
         logger.info("Processing user creation request (nickname = " + user.getNickname() + ")");
-        setCalculatedFields();
+        calculateFields();
         UserService userService = new UserService(this);
         userService.createUser();
     }
 
     @Override
-    public User getUser() {
+    public User getParsedObject() {
         return user;
     }
 }

@@ -2,94 +2,77 @@ package ua.dkovalov.socialnetwork.dao;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import ua.dkovalov.socialnetwork.entity.User;
 import ua.dkovalov.socialnetwork.entity.UserType;
-
-import java.util.ArrayList;
-import java.util.List;
+import ua.dkovalov.socialnetwork.util.Constant;
+import ua.dkovalov.socialnetwork.util.DAOUtil;
 
 public class UserDAO {
-    private static Logger logger = LogManager.getLogger(UserDAO.class.getName());
-    private static final String END_USER_BRIEF = "USER";
-    private static final String ADMIN_BRIEF = "ADMIN";
+    private static final Logger logger = LogManager.getLogger(UserDAO.class);
 
     public static void saveUser(User user) {
-        logger.info("Inserting an entry to T_USER:\n" + user);
-        Session session = DAOUtil.openSession();
-        session.beginTransaction();
-        try {
+        logger.debug("Inserting an entry into T_USER:\n" + user);
+        try (Session session = DAOUtil.openSession()) {
+            session.beginTransaction();
             session.save(user);
             session.getTransaction().commit();
             logger.debug("Insertion complete");
         } catch (HibernateException he) {
-            logger.error("Error during insertion:", he);
+            logger.error("Error during insertion of user:\n" + user, he);
             throw he;
-        } finally {
-            DAOUtil.releaseSession(session);
         }
     }
 
     public static void deleteUser(User user) {
-        logger.info("Deleting an entry from T_USER with nickname = " + user.getNickname());
-        Session session = DAOUtil.openSession();
-        session.beginTransaction();
-        try {
-            //noinspection JpaQlInspection
+        logger.debug("Deleting an entry from T_USER with nickname = " + user.getNickname());
+        try (Session session = DAOUtil.openSession()) {
+            session.beginTransaction();
             session.createQuery("delete from User where upper(nickname) = :nickname").
                     setParameter("nickname", user.getNickname().toUpperCase()).executeUpdate();
             session.getTransaction().commit();
             logger.debug("Deletion complete");
         } catch (HibernateException he) {
-            logger.error("Error during deletion:", he);
+            logger.error("Error during deletion of user:\n" + user, he);
             throw he;
-        } finally {
-            session.close();
         }
     }
 
     public static UserType fetchEndUserType() {
         logger.debug("Fetching an entry from REF_USER_TYPE table that corresponds to end user type");
         UserType endUserType = null;
-        List userTypes = DAOUtil.openSession().createCriteria(UserType.class).
-                                 add(Restrictions.eq("brief", END_USER_BRIEF)).setMaxResults(1).list();
-        if (userTypes.size() > 0) {
-            endUserType = (UserType) userTypes.get(0);
-        } else {
+        try (Session session = DAOUtil.openSession()) {
+            endUserType = (UserType) session.createCriteria(UserType.class).add(Restrictions.eq("brief", Constant.END_USER_BRIEF)).uniqueResult();
+        }
+
+        if (endUserType == null) {
             logger.warn("Unable to fetch a record from REF_USER_TYPE that corresponds to end user type");
         }
+
         return endUserType;
     }
 
     public static boolean isUserAdmin(String submitter) {
-        User user = fetchUserByNickname(submitter);
+        User user = fetchUser(submitter);
         if (user == null) {
             RuntimeException exception = new RuntimeException("Request submitter " + submitter + " was not recognized as user.");
             logger.error(exception.getMessage());
             throw exception;
         }
-        return user.getUserType().getBrief().equals(ADMIN_BRIEF);
+        return user.getUserType().getBrief().equals(Constant.ADMIN_BRIEF);
     }
 
-    public static User fetchUserByNickname(String nickname) {
+    public static User fetchUser(String nickname) {
+        logger.debug("Fetching user with nickname " + nickname);
         User user = null;
-        List users;
-        try {
-            users = DAOUtil.openSession().createCriteria(User.class).add(Restrictions.eq("nickname", nickname.toUpperCase())).list();
+        try (Session session = DAOUtil.openSession()) {
+            user = (User) session.createCriteria(User.class).add(Restrictions.eq("nickname", nickname.toUpperCase())).uniqueResult();
         } catch (HibernateException he) {
-            logger.error("Unable to fetch the user that corresponds to request submitter: " + he.getMessage());
-            throw he;
-        }
-
-        if (users.size() > 1) {
             RuntimeException exception = new RuntimeException("Uniqueness was violated for a nickname " + nickname);
             logger.error(exception.getMessage());
             throw exception;
-        } else if (users.size() == 1) {
-            user = (User) users.get(0);
         }
 
         return user;

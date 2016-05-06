@@ -1,19 +1,19 @@
 package ua.dkovalov.socialnetwork.entity;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "t_post")
 public class Post {
     private Integer postId;
     private User author;
-    private Date submissionDate;
+    private Timestamp submissionDate;
     private String postTitle;
     private String postContent;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sn.t_post_post_id_seq")
     @Column(name = "post_id")
     public Integer getPostId() {
         return postId;
@@ -34,11 +34,11 @@ public class Post {
     }
 
     @Column(name = "submission_date")
-    public Date getSubmissionDate() {
+    public Timestamp getSubmissionDate() {
         return submissionDate;
     }
 
-    public void setSubmissionDate(Date submissionDate) {
+    public void setSubmissionDate(Timestamp submissionDate) {
         this.submissionDate = submissionDate;
     }
 
@@ -64,8 +64,7 @@ public class Post {
     public String toString() {
         return "Post{" +
                 "postId=" + postId +
-                ", author ID=" + author.getUserId() +
-                ", author nickname=" + author.getNickname() +
+                ", author=" + author +
                 ", submissionDate=" + submissionDate +
                 ", postTitle='" + postTitle + '\'' +
                 ", postContent='" + postContent + '\'' +
