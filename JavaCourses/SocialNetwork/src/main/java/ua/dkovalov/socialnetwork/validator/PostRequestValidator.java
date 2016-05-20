@@ -1,11 +1,14 @@
 package ua.dkovalov.socialnetwork.validator;
 
+import org.joda.time.LocalDateTime;
+import org.springframework.stereotype.Service;
 import ua.dkovalov.socialnetwork.dao.UserDAO;
 import ua.dkovalov.socialnetwork.entity.Post;
 import ua.dkovalov.socialnetwork.entity.User;
 import ua.dkovalov.socialnetwork.request.AbstractRequest;
 import ua.dkovalov.socialnetwork.util.Constant;
 
+@Service
 public class PostRequestValidator extends AbstractRequestValidator<Post> {
 
     public PostRequestValidator() {
@@ -25,6 +28,14 @@ public class PostRequestValidator extends AbstractRequestValidator<Post> {
 
         if (!postAuthor.getUserType().getBrief().equals(Constant.END_USER_BRIEF)) {
             throwValidationError("User \"" + request.getSubmitter() + "\" has invalid type for posts submission");
+        }
+    }
+
+    public void validatePostDate() {
+        LocalDateTime currentTime = new LocalDateTime();
+        LocalDateTime requestTime = new LocalDateTime(request.getParsedObject().getSubmissionDate().toInstant().toEpochMilli());
+        if (currentTime.isBefore(requestTime)) {
+            throwValidationError("Post couldn't be submitted with future date");
         }
     }
 

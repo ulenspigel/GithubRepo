@@ -23,4 +23,12 @@ public abstract class AbstractRequestValidator<T> {
             throwValidationError("Request submitter " + request.getSubmitter() + " do not have admin privileges");
         }
     }
+
+    public AbstractRequest<T> getRequest() {
+        return request;
+    }
+
+    public void setRequest(AbstractRequest<T> request) {
+        this.request = request;
+    }
 }

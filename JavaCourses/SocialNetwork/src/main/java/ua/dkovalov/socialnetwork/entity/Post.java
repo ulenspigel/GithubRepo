@@ -13,7 +13,8 @@ public class Post {
     private String postContent;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sn.t_post_post_id_seq")
+    @SequenceGenerator(name="postSequence", sequenceName="t_post_post_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "postSequence")
     @Column(name = "post_id")
     public Integer getPostId() {
         return postId;

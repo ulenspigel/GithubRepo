@@ -1,9 +1,11 @@
 package ua.dkovalov.socialnetwork.validator;
 
+import org.springframework.stereotype.Service;
 import ua.dkovalov.socialnetwork.dao.UserDAO;
 import ua.dkovalov.socialnetwork.entity.User;
 import ua.dkovalov.socialnetwork.request.AbstractRequest;
 
+@Service
 public class UserRequestValidator extends AbstractRequestValidator<User> {
 
     public UserRequestValidator() {

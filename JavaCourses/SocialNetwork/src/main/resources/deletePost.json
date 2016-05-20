@@ -1,0 +1,8 @@
+{
+  "type"          : "DELETE_POST",
+  "submitter"     : "admin",
+  "submissionTime": "2016-05-13T08:00:00.000Z",
+  "request"       : {
+    "postId" : "7"
+  }
+}

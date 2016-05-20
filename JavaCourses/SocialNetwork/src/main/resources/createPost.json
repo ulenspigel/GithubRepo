@@ -1,9 +1,9 @@
 {
   "type"          : "CREATE_POST",
-  "submitter"     : "nickname",
-  "submissionTime": "2016-05-06T13:30:35.000Z",
+  "submitter"     : "NICKNAME",
+  "submissionTime": "2016-05-17T08:00:00.000Z",
   "request"       : {
-    "postTitle"  : "Title",
-    "postContent": "Post Content"
+    "postTitle"  : "Post from NICKNAME",
+    "postContent": "Dummy post content"
   }
 }

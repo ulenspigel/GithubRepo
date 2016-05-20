@@ -3,6 +3,7 @@ package ua.dkovalov.socialnetwork.request;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import ua.dkovalov.socialnetwork.dao.PostDAO;
 import ua.dkovalov.socialnetwork.entity.Post;
 import ua.dkovalov.socialnetwork.service.PostService;
@@ -11,11 +12,9 @@ import java.io.IOException;
 
 public class DeletePostRequest extends AbstractRequest<Post> {
     private static final Logger logger = LogManager.getLogger(DeletePostRequest.class);
+    @Autowired
+    private PostService service;
     private Post post;
-
-    public DeletePostRequest(String submitter, String requestMessage) {
-        super(submitter, requestMessage);
-    }
 
     @Override
     public void parseRequest() throws IOException {
@@ -33,8 +32,7 @@ public class DeletePostRequest extends AbstractRequest<Post> {
     public void process() {
         logger.info("Processing post deletion request (post ID = " + post.getPostId() + ")");
         calculateFields();
-        PostService service = new PostService(this);
-        service.deletePost();
+        service.setRequest(this).deletePost();
     }
 
     @Override

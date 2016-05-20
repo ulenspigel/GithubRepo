@@ -2,9 +2,9 @@
   "type"     : "CREATE_USER",
   "submitter": "admin",
   "request"  : {
-                 "firstName": "First",
-                 "lastName" : "Last",
-                 "nickname" : "nickname",
-                 "gender"   : "F"
+                 "firstName": "_Name",
+                 "lastName" : "_Surname",
+                 "nickname" : "_nickname",
+                 "gender"   : "M"
                }
 }

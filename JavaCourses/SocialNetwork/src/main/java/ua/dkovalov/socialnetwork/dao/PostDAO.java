@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import ua.dkovalov.socialnetwork.entity.Post;
-import ua.dkovalov.socialnetwork.util.DAOUtil;
 
 public class PostDAO {
     private static final Logger logger = LogManager.getLogger(PostDAO.class);

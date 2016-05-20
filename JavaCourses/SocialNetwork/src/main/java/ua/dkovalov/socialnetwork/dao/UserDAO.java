@@ -8,7 +8,6 @@ import org.hibernate.criterion.Restrictions;
 import ua.dkovalov.socialnetwork.entity.User;
 import ua.dkovalov.socialnetwork.entity.UserType;
 import ua.dkovalov.socialnetwork.util.Constant;
-import ua.dkovalov.socialnetwork.util.DAOUtil;
 
 public class UserDAO {
     private static final Logger logger = LogManager.getLogger(UserDAO.class);

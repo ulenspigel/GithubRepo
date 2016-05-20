@@ -7,6 +7,9 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import ua.dkovalov.socialnetwork.configuration.AppConfig;
 import ua.dkovalov.socialnetwork.request.*;
 
 public class RequestMapper {
@@ -22,21 +25,11 @@ public class RequestMapper {
             throw new RuntimeException(ioe);
         }
         logger.info("Request type recognized: " + fields.getType() + ". Submitter is: " + fields.getSubmitter());
-        AbstractRequest request = null;
-        switch (fields.getType()) {
-            case CREATE_USER:
-                request = new CreateUserRequest(fields.getSubmitter(), fields.getRequest().toString());
-                break;
-            case DELETE_USER:
-                request = new DeleteUserRequest(fields.getSubmitter(), fields.getRequest().toString());
-                break;
-            case CREATE_POST:
-                request = new CreatePostRequest(fields.getSubmitter(), fields.getRequest().toString(), fields.getSubmissionTime());
-                break;
-            case DELETE_POST:
-                request = new DeletePostRequest(fields.getSubmitter(), fields.getRequest().toString());
-                break;
-        }
+        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(AppConfig.class);
+        AbstractRequest request = (AbstractRequest) applicationContext.getBean(fields.getType().getRequestClass());
+        request.setSubmitter(fields.getSubmitter());
+        request.setSubmissionTime(fields.getSubmissionTime());
+        request.setRequestMessage(fields.getRequest().toString());
         try {
             request.parseRequest();
         } catch (IOException ioe) {
@@ -46,8 +39,22 @@ public class RequestMapper {
         return request;
     }
 
-    private enum RequestType {
-        CREATE_USER, DELETE_USER, CREATE_POST, DELETE_POST, SEARCH_POST, ADD_COMMENT, DELETE_COMMENT
+    private static enum RequestType {
+        CREATE_USER(CreateUserRequest.class),
+        DELETE_USER(DeleteUserRequest.class),
+        CREATE_POST(CreatePostRequest.class),
+        DELETE_POST(DeletePostRequest.class);
+        //, SEARCH_POST, ADD_COMMENT, DELETE_COMMENT
+
+        private Class requestClass;
+
+        private RequestType(Class requestClass) {
+            this.requestClass = requestClass;
+        }
+
+        public Class getRequestClass() {
+            return requestClass;
+        }
     }
 
     private static class MessageFields {
@@ -90,6 +97,5 @@ public class RequestMapper {
         public JsonNode getRequest() {
             return request;
         }
-
     }
 }
